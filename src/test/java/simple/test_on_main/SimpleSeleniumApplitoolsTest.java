@@ -1,9 +1,6 @@
 package simple.test_on_main;
 
-import com.applitools.eyes.EyesRunner;
-import com.applitools.eyes.RectangleSize;
-import com.applitools.eyes.TestResultContainer;
-import com.applitools.eyes.TestResultsSummary;
+import com.applitools.eyes.*;
 import com.applitools.eyes.selenium.ClassicRunner;
 import com.applitools.eyes.selenium.Eyes;
 import com.applitools.eyes.selenium.fluent.Target;
@@ -14,11 +11,16 @@ public class SimpleSeleniumApplitoolsTest {
     public static void main(String[] args){
         System.out.println("Simple Applitools Selenium test");
         EyesRunner runner = new ClassicRunner();
-        testNoEyes(driver);
+        Eyes eyes = new Eyes(runner);
+        eyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
+        eyes.setLogHandler(new StdoutLogHandler(true));
+        eyes.setBatch(new BatchInfo("Simple Applitools Selenium test"));
 
-        testEyesNoResize(runner);
+        testNoEyes();
 
-        testEyesResize(runner, 800, 600);
+        testEyesNoResize(eyes);
+
+        testEyesResize(eyes, 800, 600);
 
         TestResultsSummary testResults = runner.getAllTestResults();
         for (TestResultContainer resultContainer : testResults){
@@ -26,12 +28,11 @@ public class SimpleSeleniumApplitoolsTest {
         }
     }
 
-    public static void testEyesResize(EyesRunner runner, int width, int height) {
+    public static void testEyesResize(Eyes eyes, int width, int height) {
         System.out.println("This will open the eyes and resize the window and take screenshots. They will appear on the Applitools dashboard ");
 
         WebDriver driver = new ChromeDriver();
-        Eyes eyes = new Eyes(runner);
-        eyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
+
         eyes.open(driver, "App", "Test with driver resize", new RectangleSize(width, height));
         driver.get("https://demo.applitools.com/");
         eyes.check(Target.window());
@@ -41,14 +42,12 @@ public class SimpleSeleniumApplitoolsTest {
 
     }
 
-    public static void testEyesNoResize(EyesRunner runner){
+    public static void testEyesNoResize(Eyes eyes){
         System.out.println("This will open the eyes without resizing the browser and take screenshots. They will appear on the Applitools dashboard ");
 
         WebDriver driver = new ChromeDriver();
 
-        Eyes eyes = new Eyes(runner);
 
-        eyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
         eyes.open(driver, "App", "Test without driver resize");
         driver.get("https://demo.applitools.com/");
         eyes.check(Target.window());
