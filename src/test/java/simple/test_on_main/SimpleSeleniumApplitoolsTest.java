@@ -20,7 +20,7 @@ public class SimpleSeleniumApplitoolsTest {
 
         testEyesNoResize(eyes);
 
-        testEyesResize(eyes, 800, 600);
+        testEyesResize(eyes, 761, 267);
 
         TestResultsSummary testResults = runner.getAllTestResults();
         for (TestResultContainer resultContainer : testResults){
