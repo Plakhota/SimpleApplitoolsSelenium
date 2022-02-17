@@ -46,6 +46,8 @@ public class SimpleSeleniumApplitoolsTest {
         System.out.println("This will open the eyes without resizing the browser and take screenshots. They will appear on the Applitools dashboard ");
 
         WebDriver driver = new ChromeDriver();
+        driver.manage().window().setSize(new Dimension(800, 600));
+
 
 
         eyes.open(driver, "App", "Test without driver resize");
@@ -61,20 +63,34 @@ public class SimpleSeleniumApplitoolsTest {
     public static void testNoEyes(){
         System.out.println("This will resize the browser using driver.manage().window().setSize. " +
                 "driver.manage().window().setSize is also used by eyes.open");
+        final int width = 800;
+        final int height = 600;
         try {
             WebDriver driver = new ChromeDriver();
 
             driver.get("https://demo.applitools.com/");
             Thread.sleep(500);
-            driver.manage().window().setSize(new Dimension(800, 600));
+            driver.manage().window().setSize(new Dimension(width, height));
             Thread.sleep(1000);
             ((JavascriptExecutor)driver).executeScript("window.scrollBy(0,1000)");
             Thread.sleep(1000);
             ((JavascriptExecutor)driver).executeScript("window.scrollTo({top:0})");
             Thread.sleep(1000);
+
+            Dimension windowSize = driver.manage().window().getSize();
+            if (width != windowSize.width) {
+                System.out.println("Selenium width changed");
+            }
+
+            if (height != windowSize.height) {
+                System.out.println("Selenium height changed");
+            }
+
             driver.quit();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
+
+
 }
